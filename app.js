@@ -4,7 +4,7 @@ import{ auth, onAuthStateChanged, signInWithEmailAndPassword }from "./firebase.j
 const authcheck=()=>{
     onAuthStateChanged(auth, (user)=>{
         if(user){
-            window.location.replace("./dashboard.js")
+            window.location.replace("./dashboard.html")
             console.log("User Already logged in")
         }else{
             console.log("User not logged in")

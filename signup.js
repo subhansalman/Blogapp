@@ -1,4 +1,4 @@
-import{auth, createUserWithEmailAndPassword, onAuthStateChanged, setDoc} from "./firebase.js"
+import{auth, createUserWithEmailAndPassword,  setDoc, doc,db,onAuthStateChanged} from "./firebase.js"
 
 const authCheck= ()=>{
     onAuthStateChanged(auth,(user)=>{
@@ -18,44 +18,35 @@ const userPhone= document.querySelector("#Phone")
 const userbirthdate= document.querySelector("#date") 
 
 
-const signupHandler= async()=>{
-//     if(!email || !password || !userName || !userPhone || !userbirthdate){
-//         alert("Fill all the required files")
-//         return
-//     }
+const signupHandler = async () => {
+    // Check if all required fields have values
+    if (!email || !password || !userName || !userPhone || !userbirthdate) {
+        alert("Enter all the required fields");
+        return;
+    }
 
-//     const response= await createUserWithEmailAndPassword(auth, email.value, password.value)
+    try {
+        // Sign up the user with email and password
+        const response = await createUserWithEmailAndPassword(auth, email.value, password.value);
 
-//     await setDoc(doc(db,"users",response.user.uid),{
-//         fullName:userName,
-//         phoneNumber:userPhone,
-//         birthDay:userbirthdate,
-//         userEmail:email,
-//         userPassword:password
-//     })
+        // Set user data in Firestore
+        await setDoc(doc(db, "users", response.user.uid), {
+            fullName: userName.value,
+            phoneNumber: userPhone.value,
+            birthDay: userbirthdate.value,
+            userEmail: email.value,
+            userPassword: password.value
+        });
 
-//     window.location.replace("./index.html")
-// }
-
-if(!email || !password || !userName || !userPhone || !userbirthdate){
-    alert("Enter all the required fields")
-    return
-}
-
-const response =await createUserWithEmailAndPassword(auth, email.value, password.value)
-await setDoc(doc(db,"users",response.user.uid),{
-    fullName:userName,
-         phoneNumber:userPhone,
-        birthDay:userbirthdate,
-        userEmail:email,
-        userPassword:password
-})
-
-alert("user Successfully sign up")
-window.location.replace("./index.html")
-}
+        alert("User successfully signed up");
+        window.location.replace("./index.html");
+    } catch (error) {
+        console.error("Error signing up:", error.message);
+        alert("Error signing up: " + error.message);
+    }
+};
 
 
 
 window.authCheck=authCheck
-window.signupHandler=signupHandler
+window.signupHandler = signupHandler;

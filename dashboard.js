@@ -1,103 +1,81 @@
-import{addDoc,auth,collection, onAuthStateChanged} from "./firebase.js"
+import { addDoc, auth, collection, db, doc, getDocs, getDoc, onAuthStateChanged } from "./firebase.js";
 
-const authCheck= ()=>{
+// Define authCheck
+const authCheck=()=>{
     onAuthStateChanged(auth,(user)=>{
         if(!user){
             window.location.replace("./index.html")
+            console.log("User not sign in")
         }else{
-            console.log("Useris already logged in")
+            const
         }
     })
 }
 
+// Function to fetch user data
+// const fetchUserData = async (userUid) => {
+//     try {
+//         const userData = await getDoc(doc(db, "users", userUid));
+//         console.log(userData.data());
+//         if (userData.exists()) {
+//             console.log("User data:", userData.data());
+//         } else {
+//             console.log("No such document!");
+//         }
+//     } catch (error) {
+//         console.error("Error fetching user data:", error.message);
+//     }
+// };
 
-const userUID=localStorage.getItem("uid")
-
-
-
-const blogPost= async()=>{
+// Define blogPost
+const title = document.querySelector("#blogtitle");
+const desc = document.querySelector("#blogdesc");
+const checkbox = document.querySelector("#checkbox");
+const blogPost = async () => {
     try {
-        console.log("blogpost")
-        const blogTitle=document.querySelector("#blogtitle")
-        const blogDesc=document.querySelector("#blogdesc")
-        const checkbox=document.querySelector("#checkbox")
-        const blogObj={
-            title:blogTitle.ariaValueMax,
-            desc:blogDesc.ariaValueMax,
-            isPrivate:checkbox.ariaChecked,
-            uid:userUID
-        }
-
-        await addDoc(collection(db,"blogs"),blogObj)
-        alert("Blog Successfully Added")
-
-        getPost()
-
+        console.log("blogPost");
+        const obj = {
+            title: title.value,
+            desc: desc.value,
+            isPrivate: checkbox.checked,
+            uid: localStorage.getItem('uid'),
+        };
+        await addDoc(collection(db, "blogs"), obj);
+        alert("Blog created successfully!");
+        getPost();
     } catch (error) {
-        console.log("error",error.message)
+        console.log("Error:", error.message);
     }
-}
+};
 
-
+// Define getPost
 const getPost = async () => {
-    console.log("getPost get")
+    console.log("Fetching posts");
     try {
-        const parent = document.getElementById("parent")
-        const snapShot = await getDocs(collection(db, "blogs"))
-        parent.innerHTML = ""
+        const parent = document.getElementById("parent");
+        const snapShot = await getDocs(collection(db, "blogs"));
+        parent.innerHTML = "";
         snapShot.forEach((doc) => {
-            if (doc.data().isPrivate) {
-                if (doc.data().uid === localStorage.getItem("uid")) {
-                    parent.innerHTML += 
-            //         ` <div>
-            //     <li> ${doc.data().title} </li>
-            //     <li>${doc.data().desc}</li>
-            //     <li> ${doc.data().isPrivate ? "Private" : "Public"} </li>
-            //     ${doc.data().uid === localStorage.getItem("uid") ?
+            const data = doc.data();
+            const isPrivate = data.isPrivate ? "Private" : "Public";
+            const editButton = data.uid === localStorage.getItem("uid") ? "<button>EDIT</button>" : "";
 
-            //                 "<button>EDIT</button>" : ""
-            //             }
-            //     <hr />
-            // </div>`
-            `<div class="col-sm-6 col-md-4 mb-5">
-            <div class="card">
-              <div class="card-body">
-                <h5 class="card-title">${doc.data().title}</h5>
-                <p class="card-text">${doc.data().desc}</p>
-                <li> ${doc.data().isPrivate ? "Private" : "Public"} </li>
-                ${doc.data().uid === localStorage.getItem("uid") ?
-
-                                    "<button>EDIT</button>" : ""
-                                }
-                        <hr />
-              </div>
-            </div>
-          </div>`
-                }
-
-            } else {
-                parent.innerHTML += ` <div>
-                <li> ${doc.data().title} </li>
-                <li>${doc.data().desc}</li>
-                <li> ${doc.data().isPrivate ? "Private" : "Public"} </li>
-                ${doc.data().uid === localStorage.getItem("uid") ?
-
-                        "<button>EDIT</button>" : ""
-                    }
-                
-                <hr />
-            </div>`
-            }
-
-        })
-
+            parent.innerHTML += `
+                <div>
+                    <li>${data.title}</li>
+                    <li>${data.desc}</li>
+                    <li>${isPrivate}</li>
+                    ${editButton}
+                    <hr />
+                </div>
+            `;
+        });
     } catch (error) {
-
+        console.error("Error fetching posts:", error.message);
     }
+};
 
-}
-
-
-window.authCheck=authCheck
-window.blogPost=blogPost
-window.getPost=getPost
+// Attach functions to window object
+window.blogPost = blogPost;
+window.authCheck = authCheck;
+window.getPost = getPost;

@@ -58,8 +58,9 @@ const getPost = async () => {
        parent.innerHTML=""
        snapShot.forEach((doc)=>{
         const data=doc.data()
-        const isPrivate=doc.isPrivate ? "Prvate" : "Public"
-        const editBtn=doc.uid===localStorage.getItem("uid") ? "<button onClick='updateBtn(this)'>Edit</button>":""
+        const isPrivate=data.isPrivate ? "Prvate" : "Public"
+        const editBtn=data.userUID===localStorage.getItem("uid") ? "<button onClick='updateBtn(this)'>Edit</button>":""
+        
         if(data.isPrivate){
             if(data.uid===localStorage.getItem("uid")){
                 parent.innerHTML+=`
@@ -97,6 +98,7 @@ const updateBtn= async(ele)=>{
     try {
         console.log("updateBlog", ele.id)
         const editBlog= prompt("Enter the edit Value")
+        const editDesc= prompt("Enter the edit Value")
         if(!editBlog){
             alert("Edit value is ot there")
             return
@@ -104,8 +106,10 @@ const updateBtn= async(ele)=>{
         
         await updateDoc (doc(db,"userBlog",ele.id),{
             title:editBlog,
-            desc:editBlog
+            desc:editDesc
         })
+
+        console.log("Blog Updated Succesfully")
     } catch (error) {
         console.log("Error:",error.message)
     }

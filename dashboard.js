@@ -1,4 +1,4 @@
-import { addDoc, auth, collection, db, doc, getDocs, getDoc, onAuthStateChanged } from "./firebase.js";
+import { addDoc, auth, collection, db, doc, getDocs, getDoc, onAuthStateChanged, setDoc, updateDoc } from "./firebase.js";
 
 // Define authCheck
 const authCheck= ()=>{
@@ -30,6 +30,7 @@ const authCheck= ()=>{
 // };
 
 // Define blogPost
+const blogBlock=document.querySelector("#blogblock")
 const title = document.querySelector("#blogtitle");
 const desc = document.querySelector("#blogdesc");
 const checkbox = document.querySelector("#checkbox");
@@ -44,6 +45,7 @@ const blogPost= async()=>{
     }
     const addingBlog= await addDoc(collection(db,"userBlog"),blogobj)
     console.log("addingBlog",addingBlog)
+    blogBlock.innerHTML=""
     getPost()
 }
 
@@ -57,7 +59,7 @@ const getPost = async () => {
        snapShot.forEach((doc)=>{
         const data=doc.data()
         const isPrivate=doc.isPrivate ? "Prvate" : "Public"
-        const editBtn=doc.uid===localStorage.getItem("uid") ? "<button>Edit</button>":""
+        const editBtn=doc.uid===localStorage.getItem("uid") ? "<button onClick='updateBtn(this)'>Edit</button>":""
         if(data.isPrivate){
             if(data.uid===localStorage.getItem("uid")){
                 parent.innerHTML+=`
@@ -90,6 +92,24 @@ const getPost = async () => {
         console.error("Error fetching posts:", error.message);
     }
 };
+
+const updateBtn= async(ele)=>{
+    try {
+        console.log("updateBlog", ele.id)
+        const editBlog= prompt("Enter the edit Value")
+        if(!editBlog){
+            alert("Edit value is ot there")
+            return
+        }
+        
+        await updateDoc (doc(db,"userBlog",ele.id),{
+            title:editBlog,
+            desc:editBlog
+        })
+    } catch (error) {
+        console.log("Error:",error.message)
+    }
+}
 
 // Attach functions to window object
 window.blogPost = blogPost;

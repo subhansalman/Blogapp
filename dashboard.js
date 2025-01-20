@@ -59,7 +59,7 @@ const getPost = async () => {
        snapShot.forEach((doc)=>{
         const data=doc.data()
         const isPrivate=data.isPrivate ? "Prvate" : "Public"
-        const editBtn=data.userUID===localStorage.getItem("uid") ? "<button onClick='updateBtn(this)'>Edit</button>":""
+        const editBtn=data.userUID===localStorage.getItem("uid") ? `<button id="${doc.id}" onClick="updateBtn(this)" class="btn btn-primary">Edit</button>`:""
         
         if(data.isPrivate){
             if(data.uid===localStorage.getItem("uid")){
@@ -94,24 +94,27 @@ const getPost = async () => {
     }
 };
 
-const updateBtn= async(ele)=>{
+window.updateBtn= async(ele)=>{
     try {
-        console.log("updateBlog", ele.id)
-        const editBlog= prompt("Enter the edit Value")
-        const editDesc= prompt("Enter the edit Value")
-        if(!editBlog){
-            alert("Edit value is ot there")
-            return
-        }
-        
-        await updateDoc (doc(db,"userBlog",ele.id),{
-            title:editBlog,
-            desc:editDesc
-        })
+        console.log("updateBlog", ele.id); // Should print the document ID
+        const editBlog = prompt("Enter the edit Value");
+        const editDesc = prompt("Enter the description");
 
-        console.log("Blog Updated Succesfully")
+        if (!editBlog || !editDesc) {
+            alert("Both title and description are required");
+            return;
+        }
+
+        // Ensure the document reference has both collection and document ID
+        await updateDoc(doc(db, "userBlog", ele.id), {
+            title: editBlog,
+            desc: editDesc
+        });
+
+        console.log("Blog Updated Successfully");
+        getPost();
     } catch (error) {
-        console.log("Error:",error.message)
+        console.log("Error:", error.message);
     }
 }
 

@@ -1,13 +1,15 @@
 import { addDoc, auth, collection, db, doc, getDocs, getDoc, onAuthStateChanged } from "./firebase.js";
 
 // Define authCheck
-const authCheck=()=>{
+const authCheck= ()=>{
     onAuthStateChanged(auth,(user)=>{
         if(!user){
             window.location.replace("./index.html")
-            console.log("User not sign in")
+            console.log("user not login")
+
         }else{
-            const
+            console.log("user already loggedin")
+            console.log("User UID:", user.uid)
         }
     })
 }
@@ -31,46 +33,60 @@ const authCheck=()=>{
 const title = document.querySelector("#blogtitle");
 const desc = document.querySelector("#blogdesc");
 const checkbox = document.querySelector("#checkbox");
-const blogPost = async () => {
-    try {
-        console.log("blogPost");
-        const obj = {
-            title: title.value,
-            desc: desc.value,
-            isPrivate: checkbox.checked,
-            uid: localStorage.getItem('uid'),
-        };
-        await addDoc(collection(db, "blogs"), obj);
-        alert("Blog created successfully!");
-        getPost();
-    } catch (error) {
-        console.log("Error:", error.message);
+
+const blogPost= async()=>{
+    console.log("Blog post")
+    const blogobj={
+        title:title.value,
+        desc:desc.value,
+        isPrivate:checkbox.checked,
+        userUID:localStorage.getItem("uid")
     }
-};
+    const addingBlog= await addDoc(collection(db,"userBlog"),blogobj)
+    console.log("addingBlog",addingBlog)
+    getPost()
+}
 
 // Define getPost
 const getPost = async () => {
     console.log("Fetching posts");
     try {
-        const parent = document.getElementById("parent");
-        const snapShot = await getDocs(collection(db, "blogs"));
-        parent.innerHTML = "";
-        snapShot.forEach((doc) => {
-            const data = doc.data();
-            const isPrivate = data.isPrivate ? "Private" : "Public";
-            const editButton = data.uid === localStorage.getItem("uid") ? "<button>EDIT</button>" : "";
-
-            parent.innerHTML += `
-                <div>
-                    <li>${data.title}</li>
-                    <li>${data.desc}</li>
-                    <li>${isPrivate}</li>
-                    ${editButton}
-                    <hr />
-                </div>
-            `;
-        });
-    } catch (error) {
+       const parent=document.querySelector("#parent")
+       const snapShot= await getDocs(collection(db,"userBlog"))
+       parent.innerHTML=""
+       snapShot.forEach((doc)=>{
+        const data=doc.data()
+        const isPrivate=doc.isPrivate ? "Prvate" : "Public"
+        const editBtn=doc.uid===localStorage.getItem("uid") ? "<button>Edit</button>":""
+        if(data.isPrivate){
+            if(data.uid===localStorage.getItem("uid")){
+                parent.innerHTML+=`
+                <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">${data.title}</h5>
+        <p class="card-text">${data.desc}</p>
+        ${editBtn}
+      </div>
+    </div>
+  </div>
+                `
+            }
+        }else{
+            parent.innerHTML+=`
+                <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">${data.title}</h5>
+        <p class="card-text">${data.desc}</p>
+        ${editBtn}
+      </div>
+    </div>
+  </div>
+                `
+        }
+       })
+       } catch (error) {
         console.error("Error fetching posts:", error.message);
     }
 };
@@ -79,3 +95,5 @@ const getPost = async () => {
 window.blogPost = blogPost;
 window.authCheck = authCheck;
 window.getPost = getPost;
+
+

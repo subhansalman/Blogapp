@@ -1,0 +1,162 @@
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    
+    height: 100vh;
+}
+.bodycontent{
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+.navbar{
+    background-color: white;
+    display: flex;
+    justify-content: space-evenly;
+    border-radius: 14px;
+    align-items: center;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+.navbar img{
+    width: 70px;
+    height: 70px;
+}
+li{
+    list-style: none;
+    display: inline-block;
+    text-align: center;
+    padding: 0px 20px; 
+}
+a{
+    color: #000000;    
+}
+a:hover{
+    text-decoration: underline;
+}
+.profile-container {
+    width: 100%;
+    max-width: 800px;
+    padding: 20px;
+}
+
+.profile-card {
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.profile-card:hover{
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;}
+
+.profile-header {
+    text-align: center;
+    padding: 20px;
+    background: #1d11fa;
+    color: white;
+    border-bottom: 2px solid #ddd;
+}
+
+.profile-picture img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    margin-bottom: 15px;
+    border: 4px solid white;
+}
+
+
+
+.job-title {
+    font-size: 16px;
+    font-weight: 300;
+}
+
+.profile-details {
+    padding: 20px;
+}
+
+.profile-details h2 {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.detail {
+    margin-bottom: 15px;
+}
+
+
+.detail span {
+    font-size: 16px;
+    color: #666;
+}
+
+.profile-footer {
+    padding: 20px;
+    background: #f9f9f9;
+    text-align: center;
+}
+
+.edit-button {
+    background-color: #6c63ff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.edit-button:hover {
+    background-color: #574bbf;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+    .profile-card {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .profile-header {
+        padding: 15px;
+    }
+
+    .profile-picture img {
+        width: 100px;
+        height: 100px;
+    }
+
+    .name {
+        font-size: 20px;
+    }
+
+    .job-title {
+        font-size: 14px;
+    }
+
+    .profile-details h2 {
+        font-size: 20px;
+    }
+
+    .detail {
+        font-size: 14px;
+    }
+
+    .edit-button {
+        font-size: 14px;
+        padding: 8px 15px;
+    }
+}

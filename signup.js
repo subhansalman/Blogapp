@@ -15,8 +15,7 @@ const email=document.querySelector("#email-signup")
 const password= document.querySelector("#email-password")
 const userName= document.querySelector("#username")
 const userPhone= document.querySelector("#Phone")
-const userbirthdate= document.querySelector("#date") 
-
+const userbirthdate= document.querySelector("#date")
 
 const signupHandler = async () => {
     // Check if all required fields have values
@@ -35,7 +34,7 @@ const signupHandler = async () => {
             phoneNumber: userPhone.value,
             birthDay: userbirthdate.value,
             userEmail: email.value,
-            userPassword: password.value
+            userPassword: password.value,
         });
 
         alert("User successfully signed up");
